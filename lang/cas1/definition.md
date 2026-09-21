@@ -27,5 +27,120 @@ specific instructions or data.
 For instructions and data, the byte size depends on the contents.
 Labels always have 0 byte size, as they are not represented in the final binary file.
 
+Note that the actual directive sizes are not necessary to program CAS1. Instead, use labels to
+jump.
+
 
 ## 2. Instructions
+### 2.1. General shape
+Instructions in CAS1 are always headed by an instructions identifier, and zero or more arguments.
+Every arguments consists of either:
+1. A literal; or
+2. A register.
+
+Literals are unsigned numbers in base 2 or base 16, or signed or unsigned integer- or
+floating-point numbers in base 10., base 10 or base 16.
+Registers are numbers or identifiers prefixed by a hashtag. The exact possible registers are
+defined by the specific target processor.
+
+### 2.2. Instruction list
+The following instructions are supported in CAS1.
+
+**2.2.1. Mathmatical instructions**  
+1. `uaddX #<dst> #<lhs> #<rhs>` Adds the X rightmost bits of register `<lhs>` to the X rightmost
+   bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X can be 8,
+   16, 32 or 64. The bits are interpreted as an unsigned integer.
+2. `usubX #<dst> #<lhs> #<rhs>` Subtracts the X rightmost bits of register `<rhs>` from the X
+   rightmost bits of register `<lhs>` and stores the result in the X rightmost bits of `<dst>`. X
+   can be 8, 16, 32 or 64. The bits are interpreted as an unsigned integer.
+3. `umulX #<dst> #<lhs> #<rhs>` Multiplies the X rightmost bits of register `<lhs>` with the X
+   rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X
+   can be 8, 16, 32 or 64. The bits are interpreted as an unsigned integer.
+4. `udivX #<dst> #<lhs> #<rhs>` Divides the X rightmost bits of register `<lhs>` by the X rightmost
+   bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X can be 8,
+   16, 32 or 64. The bits are interpreted as an unsigned integer.
+5. `umodX #<dst> #<lhs> #<rhs>` Takes the modulo of the X rightmost bits of register `<lhs>` by the
+   X rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X
+   can be 8, 16, 32 or 64. The bits are interpreted as an unsigned integer.
+6. `saddX #<dst> #<lhs> #<rhs>` Adds the X rightmost bits of register `<lhs>` to the X rightmost
+   bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X can be 8,
+   16, 32 or 64. The bits are interpreted as a signed integer.
+7. `ssubX #<dst> #<lhs> #<rhs>` Subtracts the X rightmost bits of register `<rhs>` from the X
+   rightmost bits of register `<lhs>` and stores the result in the X rightmost bits of `<dst>`. X
+   can be 8, 16, 32 or 64. The bits are interpreted as a signed integer.
+8. `smulX #<dst> #<lhs> #<rhs>` Multiplies the X rightmost bits of register `<lhs>` with the X
+   rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X
+   can be 8, 16, 32 or 64. The bits are interpreted as a signed integer.
+9. `sdivX #<dst> #<lhs> #<rhs>` Takes the modulo of the X rightmost bits of register `<lhs>` by the
+   X rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X
+   can be 8, 16, 32 or 64. The bits are interpreted as a signed integer.
+10. `smodX #<dst> #<lhs> #<rhs>` Takes the modulo of the X rightmost bits of register `<lhs>` by
+    the X rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of
+    `<dst>`. X can be 8, 16, 32 or 64. The bits are interpreted as a signed integer.
+11. `faddX #<dst> #<lhs> #<rhs>` Adds the X rightmost bits of register `<rhs>` to the X rightmost
+    bits of register `<lhs>` and stores the result in the X rightmost bits of `<dst>`. X can be 32
+    or 64. The bits are interpreted as an IEEE754 floating-point.
+12. `fsubX #<dst> #<lhs> #<rhs>` Subtracts the X rightmost bits of register `<rhs>` from the X
+    rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X
+    can be 32 or 64. The bits are interpreted as an IEEE754 floating-point. 
+13. `fmulX #<dst> #<lhs> #<rhs>` Multiplies the X rightmost bits of register `<lhs>` to the X
+    rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X
+    can be 32 or 64. The bits are interpreted as an IEEE754 floating-point. 
+14. `fdivX #<dst> #<lhs> #<rhs>` Divides the X rightmost bits of register `<lhs>` by the X
+    rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of `<dst>`. X
+    can be 32 or 64. The bits are interpreted as an IEEE754 floating-point. 
+15. `fmodX #<dst> #<lhs> #<rhs>` Takes the modulo of the X rightmost bits of register `<lhs>` with
+    the X rightmost bits of register `<rhs>` and stores the result in the X rightmost bits of
+    `<dst>`. X can be 32 or 64. The bits are interpreted as an IEEE754 floating-point.
+16. `land #<dst> #<lhs> <rhs>` Takes the logical and-operation between `<lhs>` and `<rhs>`, storing
+    the result in `<dst>`.
+17. `lor #<dst> #<lhs> <rhs>` Takes the logical or-operation between `<lhs>` and `<rhs>`, storing
+    the result in `<dst>`.
+18. `lnot #<dst> #<src>` Takes the logical not-operation of `<src>` and stores it in `<dst>`.
+
+**2.2.2. Bitwise operations**  
+1. `shl #<dst> #<lhs> #<rhs>` Shifts the bits in register `<lhs>` by `<rhs>` places to the left,
+   filling the right end with 0's. The result is stored in `<dst>`.
+2. `shr #<dst> #<lhs> #<rhs>` Shifts the bits in register `<lhs>` by `<rhs>` places to the right,
+   filling the left end with 0's. The result is stored in `<dst>`.
+3. `band #<dst> #<lhs> #<rhs>` Takes the bitwise and-operation between `<lhs>` and `<rhs>`,
+   storing the result in `<dst>`.
+3. `bor #<dst> #<lhs> #<rhs>` Takes the bitwise or-operation between `<lhs>` and `<rhs>`,
+   storing the result in `<dst>`.
+4. `bxor #<dst> #<lhs> #<rhs>` Takes the bitwise xor-operation between `<lhs>` and `<rhs>`,
+   storing the result in `<dst>`.
+5. `bnot #<dst> #<src>` Takes the bitwise not-operation of `<src>`, storing the result in `<dst>`.
+
+**2.2.3. Literal operations**
+1. `constX #<dst> <lit>` Stores literal `<lit>` in the X rightmost bits of register `<dst>`. The
+   literal may not exceed X bits in size. X can be 8, 16, 32 or 64.
+
+**2.2.4. Memory operations**  
+Memory addresses have a processor-specific size. The address is read in the relevant rightmost bits
+of a register.
+1. `load8 #<dst> #<src>` Loads the byte at the address in `#<src>` at the 8 rightmost bits in
+   `<dst>`.
+2. `load16 #<dst> #<src>` Loads the byte at the address in `#<src>` _and_ its subsequent byte at
+   the 16 rightmost bits in `<dst>`.
+3. `load32 #<dst> #<src>` Loads the byte at the address in `#<src>` _and_ its subsequent three
+   bytes at the 32 rightmost bits in `<dst>`.
+4. `load64 #<dst> #<src>` Loads the byte at the address in `#<src>` _and_ its subsequent seven
+   bytes at the 64 rightmost bits in `<dst>`.
+5. `store8 #<dst> #<src>` Stores the 8 rightmost bits of `<src>` at the byte at the address in
+   `#<dst>`.
+6. `store16 #<dst> #<src>` Stores the 16 rightmost bits of `<src>` at the byte at the address in
+   `#<dst>` and its subsequent byte.
+7. `store32 #<dst> #<src>` Stores the 32 rightmost bits of `<src>` at the byte at the address in
+   `#<dst>` and its subsequent three bytes.
+8. `store64 #<dst> #<src>` Stores the 64 rightmost bits of `<src>` at the byte at the address in
+   `#<dst>` and its subsequent seven bytes.
+9. `memsize <dst>` Loads the total available system memory size in register `<dst>`. The size of
+   unsigned integer has the same size as the address width.
+
+**2.2.5. System operations**  
+1. `cpuid <dst>` Loads the current CPU identifier, as a 64-bit unsigned integer, in register
+   `<dst>`. The identifier itself _may_ have further semantic meaning, but this is
+   processor-specific.
+2. `time <dst>` Loads the current unix timestamp, as a 64-bit unsigned integer, in register
+   `<dst>`.
+3. `exit` Terminates the program, shutting down the computer.
