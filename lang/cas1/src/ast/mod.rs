@@ -5,6 +5,8 @@
 //!   Defines the CAS1 assembly language AST.
 //
 
+use ast_toolkit2::loc::{Loc, Located};
+
 
 /// The toplevel representation of a CAS1 file.
 pub struct Program {
@@ -13,6 +15,7 @@ pub struct Program {
 }
 
 /// Defines a directive, i.e., a statement.
+#[derive(Located)]
 pub enum Directive {
     /// It's an instruction.
     Instr(Instr),
@@ -25,6 +28,8 @@ pub enum Directive {
 
 
 /// Represents an instruction.
+#[derive(Located)]
+#[loc(all)]
 pub struct Instr {
     /// The type of instruction.
     pub ty:   Ident,
@@ -33,6 +38,7 @@ pub struct Instr {
 }
 
 /// Represents the argument to an instruction.
+#[derive(Located)]
 pub enum InstrArg {
     /// It's a literal value.
     Lit(Lit),
@@ -45,6 +51,8 @@ pub enum InstrArg {
 
 
 /// Represents a label.
+#[derive(Located)]
+#[loc(all)]
 pub struct Label {
     /// The dot token introducing the label.
     pub dot_token: Dot,
@@ -53,12 +61,16 @@ pub struct Label {
 }
 
 /// Represents a register.
+#[derive(Located)]
+#[loc(all)]
 pub struct Reg {
     /// The hashtag-token introducing the register.
     pub hash_token: Hash,
     /// The register identifier naming it.
     pub regident:   RegIdent,
 }
+/// Represents the name of a register.
+#[derive(Located)]
 pub enum RegIdent {
     Ident(Ident),
     Int(LitInt),
@@ -67,12 +79,15 @@ pub enum RegIdent {
 
 
 /// Represents an identifier.
+#[derive(Located)]
 pub struct Ident {
     /// The value of the identifier.
     pub value: String,
+    pub loc:   Loc,
 }
 
 /// Represents a literal value.
+#[derive(Located)]
 pub enum Lit {
     /// It's a decimal/hexadecimal/binary, unsigned integer value.
     Int(LitInt),
@@ -82,20 +97,36 @@ pub enum Lit {
     Float(LitFloat),
 }
 
+/// Represents a zero-or-positive number.
+#[derive(Located)]
 pub struct LitInt {
     /// The value of the literal.
     pub value: u64,
+    pub loc:   Loc,
 }
+
+/// Represents a negative number.
+#[derive(Located)]
 pub struct LitNegInt {
     /// The value of the literal.
     pub value: i64,
+    pub loc:   Loc,
 }
+
+/// Represents a floating-point number.
+#[derive(Located)]
 pub struct LitFloat {
     /// The value of the literal.
     pub value: f64,
+    pub loc:   Loc,
 }
 
 
 
-pub struct Dot;
-pub struct Hash;
+/// Represents a parsed `.`-token.
+#[derive(Located)]
+pub struct Dot(Loc);
+
+/// Represents a parsed `#`-token.
+#[derive(Located)]
+pub struct Hash(Loc);

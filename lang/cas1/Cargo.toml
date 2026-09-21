@@ -9,6 +9,7 @@ description = "Implements a(n) (dis)assembler for the CAS1 assembly language."
 
 
 [dependencies]
+ast-toolkit2 = { git = "https://github.com/Lut99/ast-toolkit2-rs", features = ["macros", "nibble"] }
 
 
 [features]
