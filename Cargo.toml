@@ -1,0 +1,28 @@
+[package]
+name = "computers2"
+version = "0.1.0"
+edition = "2024"
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Simulating computers at the assembly level, cuz I like it."
+
+
+[dependencies]
+
+
+[features]
+default = []
+
+
+[workspace]
+resolver = "2"
+members = [
+    
+]
+
+
+[workspace.package]
+authors = ["Lut99"]
+repository = "https://github.com/Lut99/computers2-rs"
+license = "GPLv3"
