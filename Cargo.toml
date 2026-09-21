@@ -18,7 +18,8 @@ default = []
 [workspace]
 resolver = "2"
 members = [
-    
+    # Languages
+    "lang/cas1",
 ]
 
 
